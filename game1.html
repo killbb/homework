@@ -16,20 +16,21 @@
                 <div class="title">生命值</div>
                 <div class="lifes">10</div>
             </div>
+        
         </div>
-        <div class="deadline"></div>
+        <div  class="tip">友情提示：落水会有危险哦！</div>
     </div>
 </body>
 <script>
 
-    //获取游戏界面元素
+    //获取游戏界面
     var gamePage = document.querySelector(".gamePage");
 
     //设置字母数组
     var words = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
     //产生字符
-    function yieldWords(numbers = 7) {
+    function yieldWords(numbers = 4) {
         for(let i = 0 ; i < numbers ; i++){
             var word = document.createElement("span");
             word.innerHTML = words[Math.ceil(Math.random()*25)];
@@ -45,7 +46,7 @@
                 text-align:center;
                 line-height:50px;
                 color:#ff0088;
-                border-radius:100%;
+                border-radius:50%;
                 transition: all .3s;
                 `;
             gamePage.appendChild(word);
@@ -58,15 +59,17 @@
         var spans = document.querySelectorAll(".gamePage span");
         for(let i = 0; i < spans.length ; i++){
             spans[i].style.top = spans[i].offsetTop+speed+"px";
-			//判断字母的高度是否大于400，大于400则删除该节点
-            if(spans[i].offsetTop > 400){
+			//判断字母的高度
+            if(spans[i].offsetTop > 430){
                 //获取生命值节点
                 var lifes = document.querySelector(".lifes");
                 lifes.innerHTML = parseInt(lifes.innerHTML)-1;
                 //生命小于0则挑战失败
                 if(parseInt(lifes.innerHTML)<0){
-                    alert("挑战失败！");
+                    alert("挑战失败！单击确定重新开始");
+                    history.go(0)        //刷新界面
                 }
+                
                 spans[i].style.opacity = 0;
                 gamePage.removeChild(spans[i]);
                 yieldWords(1);
@@ -74,15 +77,14 @@
         }
     },10);
 
-    //点击清除字母
+    //清除字母
     document.onkeydown = function (ev) {
         var code  = String.fromCharCode(ev.keyCode);;
         var spans = document.querySelectorAll(".gamePage span");
-        //如果字母与按键一样则删除，并重新生成一个，給分数+1
         for(let i = 0; i < spans.length ; i++){
             if(spans[i].innerHTML == code){
                 gamePage.removeChild(spans[i]);
-                //获取分数节点
+                //获取分数
                 var records = document.querySelector(".records");
                 records.innerHTML = parseInt(records.innerHTML)+1;
                 yieldWords(1);
